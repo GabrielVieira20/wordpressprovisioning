@@ -67,7 +67,7 @@
       with_items: 
           - { regex: 'database_name_here', value: 'wordpress_db'}
           - { regex: 'username_here', value: 'wordpress_user'}
-          - { regex: 'password_here', value: '12345'}
+          - { regex: 'password_here', value: 'password_here'}
       become: yes
 
     - name: "Configura o apache para provisionar o diretório do Wordpress"
