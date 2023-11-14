@@ -1,0 +1,37 @@
+---
+# tasks file for mysql
+    - name: Instala Dependencias
+      apt: 
+        name:
+          - mysql-server-5.6
+          - python-mysqldb
+        state: latest
+        # update_cache: yes
+      become: yes
+    
+    - name: "Cria o banco do MySQL"
+      mysql_db:
+        name: "{{ wp_db_name }}"
+        login_user: root
+        state: present
+        
+    - name: 'Cria o usuário do MySQL'
+      mysql_user:
+        login_user: root
+        name: "{{ wp_username }}"
+        password: "{{ wp_user_password }}"
+        priv: '"{{ wp_db_name }}".*:ALL'
+        state: present
+        host: "{{ item }}"
+      with_items:
+         - "{{ wp_host_ip }}"
+
+
+    - name: "Configura o MySQL para aceitar conexoes remotas"
+      lineinfile:
+        path: /etc/mysql/my.cnf
+        regexp: "bind-address"
+        line: "bind-address = 0.0.0.0"
+      become: yes
+      notify: 
+        - restart mysql
